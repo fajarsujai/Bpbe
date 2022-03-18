@@ -1,4 +1,4 @@
-pipline {
+pipeline {
     agent any
     environment {
         registry = "docker.io/fajarsujai/bpbe"
