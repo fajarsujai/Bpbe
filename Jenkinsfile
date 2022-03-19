@@ -52,9 +52,9 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps{
                 script {
-                        sh "sed -i 's/bpbe:latest/bpbe:$env.VERSION/g' deployment-be.yaml"
-                        sh "kubectl apply -f deployment-be.yaml"
-                        sh "kubectl rollout status deployment-be bpbe"
+                        sh "sed -i 's/bpbe:latest/bpbe:$env.VERSION/g' deployment.yaml"
+                        sh "kubectl apply -f deployment.yaml"
+                        sh "kubectl rollout status deployment bpbe"
                         sh "kubectl get pods | grep bpbe"
                 }
             }
