@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-bp
+  name: backend-bp 
+  namespace: staging
 spec:
   selector:
     matchExpressions:
