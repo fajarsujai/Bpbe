@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-bp 
+  name: backend-bp
   namespace: staging
 spec:
   selector:
@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: backend-bp
-        image: fajarsujai/bpbe:4-main-617a8e8
+        image: fajarsujai/bpbe:latest
         ports:
         - containerPort: 4000
 
