@@ -4,7 +4,7 @@ pipeline {
         registry = "docker.io/fajarsujai/bpbe"
         serviceName = "frontend-bp"
         dockerImage = ''
-        branchname = "main"
+        branchname = "staging"
     }
     stages {
         stage("Clone Code") {
