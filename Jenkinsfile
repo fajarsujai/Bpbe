@@ -54,8 +54,8 @@ pipeline {
                 script {
                         sh "sed -i 's/bpbe:latest/bpbe:$env.VERSION/g' deployment-be.yaml"
                         sh "kubectl apply -f deployment-be.yaml"
-                        sh "kubectl rollout status deployment backend-bp"
-                        sh "kubectl get pods | grep backend-bp"
+                        sh "kubectl rollout status deployment -n production backend-bp"
+                        sh "kubectl get pods -n production | grep backend-bp"
                 }
             }
         }
