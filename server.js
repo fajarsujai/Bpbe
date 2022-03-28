@@ -12,7 +12,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // mongoose.connect('https://mongo.fajarsujai.my.id/todos', { useNewUrlParser: true });
-mongoose.connect('mongodb://mongo-bp-service:27017/todos', { useNewUrlParser: true });
+mongoose.connect('mongodb://mongo-bp-service-prod:27017/todos', { useNewUrlParser: true });
 const connection = mongoose.connection;
 
 connection.once('open', function() {
