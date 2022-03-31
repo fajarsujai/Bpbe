@@ -5,6 +5,22 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const todoRoutes = express.Router();
 const PORT = 4000;
+const metrics = require('metrics');
+
+var metricsServer = new metrics.Server(config.metricsPort || 9091);
+
+metricsServer.addMetric('com.co.thingA', counter);
+metricsServer.addMetric('com.co.thingB', hist1);
+metricsServer.addMetric('com.co.thingC', hist2);
+metricsServer.addMetric('com.co.thingD', meter);
+metricsServer.addMetric('com.co.thingE', timer);
+
+// Report to console every 1000ms.
+var report = new metrics.Report();
+report.addMetric('com.co.thingA', counter);
+var reporter = new metrics.ConsoleReporter(report);
+
+reporter.start(1000);
 
 let Todo = require('./todo.model');
 
