@@ -5,22 +5,46 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const todoRoutes = express.Router();
 const PORT = 4000;
-const metrics = require('metrics');
 
-var metricsServer = new metrics.Server(9091);
+// Create a Registry which registers the metrics
+const register = new client.Registry()
 
-metricsServer.addMetric('com.co.thingA', counter);
-metricsServer.addMetric('com.co.thingB', hist1);
-metricsServer.addMetric('com.co.thingC', hist2);
-metricsServer.addMetric('com.co.thingD', meter);
-metricsServer.addMetric('com.co.thingE', timer);
+// Add a default label which is added to all metrics
+register.setDefaultLabels({
+  app: 'example-nodejs-app'
+})
 
-// Report to console every 1000ms.
-var report = new metrics.Report();
-report.addMetric('com.co.thingA', counter);
-var reporter = new metrics.ConsoleReporter(report);
+// Enable the collection of default metrics
+client.collectDefaultMetrics({ register })
 
-reporter.start(1000);
+// Create a histogram metric
+const httpRequestDurationMicroseconds = new client.Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'Duration of HTTP requests in microseconds',
+  labelNames: ['method', 'route', 'code'],
+  buckets: [0.1, 0.3, 0.5, 0.7, 1, 3, 5, 7, 10]
+})
+
+// Register the histogram
+register.registerMetric(httpRequestDurationMicroseconds)
+
+// Define the HTTP server
+const server = http.createServer(async (req, res) => {
+    // Start the timer
+  const end = httpRequestDurationMicroseconds.startTimer()
+
+  // Retrieve route from request object
+  const route = url.parse(req.url).pathname
+
+  if (route === '/metrics') {
+    // Return all metrics the Prometheus exposition format
+    res.setHeader('Content-Type', register.contentType)
+    res.end(register.metrics())
+  }
+
+  // End timer and add labels
+  end({ route, code: res.statusCode, method: req.method })
+});
 
 let Todo = require('./todo.model');
 
