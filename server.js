@@ -48,7 +48,6 @@ const server = http.createServer(async (req, res) => {
   // End timer and add labels
   end({ route, code: res.statusCode, method: req.method })
 });
-server.listen(PORT);
 
 let Todo = require('./todo.model');
 
@@ -112,6 +111,8 @@ todoRoutes.route('/add').post(function(req, res) {
 
 app.use('/todos', todoRoutes);
 
-app.listen(PORT, function() {
-    console.log("Server is running on Port: " + PORT);
-});
+// app.listen(PORT, function() {
+//     console.log("Server is running on Port: " + PORT);
+// });
+
+server.listen(PORT);
