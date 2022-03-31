@@ -7,7 +7,7 @@ const todoRoutes = express.Router();
 const PORT = 4000;
 const metrics = require('metrics');
 
-var metricsServer = new metrics.Server(config.metricsPort || 9091);
+var metricsServer = new metrics.Server(9091);
 
 metricsServer.addMetric('com.co.thingA', counter);
 metricsServer.addMetric('com.co.thingB', hist1);
