@@ -32,7 +32,7 @@ const httpRequestDurationMicroseconds = new client.Histogram({
 register.registerMetric(httpRequestDurationMicroseconds)
 
 // Define the HTTP server
-const server = http.createServer(async (req, res) => {
+const server= http.createServer(async (req, res) => {
     // Start the timer
   const end = httpRequestDurationMicroseconds.startTimer()
 
