@@ -43,8 +43,8 @@ pipeline {
                 script {
                         sh "sed -i 's/bpbe:latest/bpbe:$env.VERSION/g' kubernetes/staging/deployment.yaml"
                         sh "kubectl apply -f kubernetes/staging/deployment.yaml"
-                        sh "kubectl rollout status deployment frontend -n staging"
-                        sh "kubectl get pods -n staging | grep frontend"
+                        sh "kubectl rollout status deployment backend-bp -n staging"
+                        sh "kubectl get pods -n staging | grep backend-bp"
                 }
             }
         }
@@ -63,8 +63,8 @@ pipeline {
                 script {
                         sh "sed -i 's/bpbe:latest/bpbe:$env.VERSION/g' kubernetes/production/deployment.yaml"
                         sh "kubectl apply -f kubernetes/production/deployment.yaml"
-                        sh "kubectl rollout status deployment frontend -n production"
-                        sh "kubectl get pods -n production | grep frontend"
+                        sh "kubectl rollout status deployment backend-bp -n production"
+                        sh "kubectl get pods -n production | grep backend-bp"
                      }
             }
         }
