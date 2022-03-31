@@ -5,6 +5,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const todoRoutes = express.Router();
 const PORT = 4000;
+const client = require('prom-client')
 
 // Create a Registry which registers the metrics
 const register = new client.Registry()
