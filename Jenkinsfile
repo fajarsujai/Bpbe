@@ -4,7 +4,7 @@ pipeline {
         registry = "docker.io/fajarsujai/bpbe"
         serviceName= 'backend'
         dockerImage = ''
-        branchname = "main"
+        branchname = "staging"
     }
     stages {
         stage("Clone Code") {
@@ -63,8 +63,8 @@ pipeline {
                 script {
                         sh "sed -i 's/bpbe:latest/bpbe:$env.VERSION/g' kubernetes/production/deployment.yaml"
                         sh "kubectl apply -f kubernetes/production/deployment.yaml"
-                        sh "kubectl rollout status deployment backend-bp -n production"
-                        sh "kubectl get pods -n production | grep backend-bp"
+                        sh "kubectl rollout status deployment backend-bp -n staging"
+                        sh "kubectl get pods -n staging | grep backend-bp"
                      }
             }
         }
