@@ -13,7 +13,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // mongoose.connect('https://mongo.fajarsujai.my.id/todos', { useNewUrlParser: true });
-mongoose.connect('mongodb://mongo-bp-service-prod:27017/todos', { useNewUrlParser: true });
+mongoose.connect('mongodb://mongo-bp-service:27017/todos', { useNewUrlParser: true });
 const connection = mongoose.connection;
 
 connection.once('open', function() {
@@ -69,47 +69,47 @@ todoRoutes.route('/add').post(function(req, res) {
 
 app.use('/todos', todoRoutes);
 
-// App
-// const client = require('prom-client');
-const collectDefaultMetrics = client.collectDefaultMetrics;
-// Probe every 5th second.
-collectDefaultMetrics({ timeout: 5000 });
+// // App
+// // const client = require('prom-client');
+// const collectDefaultMetrics = client.collectDefaultMetrics;
+// // Probe every 5th second.
+// collectDefaultMetrics({ timeout: 5000 });
 
-const counter = new client.Counter({
-  name: 'node_request_operations_total',
-  help: 'The total number of processed requests'
-});
-
-const histogram = new client.Histogram({
-  name: 'node_request_duration_seconds',
-  help: 'Histogram for the duration in seconds.',
-  buckets: [1, 2, 5, 6, 10]
-});
-
-// const app = express();
-// app.get('/', (req, res) => {
-
-//   //Simulate a sleep
-//   var start = new Date()
-//   var simulateTime = 1000
-
-//   setTimeout(function(argument) {
-//     // execution time simulated with setTimeout function
-//     var end = new Date() - start
-//     histogram.observe(end / 1000); //convert to seconds
-//   }, simulateTime)
-
-//   counter.inc();
-  
-//   res.send('Hello world\n');
+// const counter = new client.Counter({
+//   name: 'node_request_operations_total',
+//   help: 'The total number of processed requests'
 // });
 
+// const histogram = new client.Histogram({
+//   name: 'node_request_duration_seconds',
+//   help: 'Histogram for the duration in seconds.',
+//   buckets: [1, 2, 5, 6, 10]
+// });
 
-// Metrics endpoint
-app.get('/metrics', (req, res) => {
-  res.set('Content-Type', client.register.contentType)
-  res.end(client.register.metrics())
-})
+// // const app = express();
+// // app.get('/', (req, res) => {
+
+// //   //Simulate a sleep
+// //   var start = new Date()
+// //   var simulateTime = 1000
+
+// //   setTimeout(function(argument) {
+// //     // execution time simulated with setTimeout function
+// //     var end = new Date() - start
+// //     histogram.observe(end / 1000); //convert to seconds
+// //   }, simulateTime)
+
+// //   counter.inc();
+  
+// //   res.send('Hello world\n');
+// // });
+
+
+// // Metrics endpoint
+// app.get('/metrics', (req, res) => {
+//   res.set('Content-Type', client.register.contentType)
+//   res.end(client.register.metrics())
+// })
 
 
 
