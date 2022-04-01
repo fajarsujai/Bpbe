@@ -120,8 +120,8 @@
 const express = require('express');
 
 // Constants
-const PORT = 5000;
-const HOST = '0.0.0.0';
+const PORT = 4000;
+// const HOST = '0.0.0.0';
 
 // App
 const client = require('prom-client');
@@ -165,7 +165,11 @@ app.get('/metrics', (req, res) => {
   res.end(client.register.metrics())
 })
 
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);
+app.listen(PORT, function() {
+    console.log("Server is running on Port: " + PORT);
+});
+
+// app.listen(PORT, HOST);
+// console.log(`Running on http://${HOST}:${PORT}`);
 
 
