@@ -2,7 +2,7 @@ pipeline {
     agent { label '' }
     environment {
         registry = "docker.io/fajarsujai/bpbe"
-        serviceName= 'backend-bp'
+        serviceName= 'backend-bp-trunkbase'
         dockerImage = ''
         branchname = "main"
     }
