@@ -86,7 +86,7 @@ const histogram = new client.Histogram({
   buckets: [1, 2, 5, 6, 10]
 });
 
-const app = express();
+// const app = express();
 // app.get('/', (req, res) => {
 
 //   //Simulate a sleep
