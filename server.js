@@ -4,8 +4,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const todoRoutes = express.Router();
+const promMid = require('express-prometheus-middleware');
 const PORT = 4000;
-// const client = require('prom-client')
 
 let Todo = require('./todo.model');
 
@@ -13,7 +13,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // mongoose.connect('https://mongo.fajarsujai.my.id/todos', { useNewUrlParser: true });
-mongoose.connect('mongodb://mongo-bp-service:27017/todos', { useNewUrlParser: true });
+mongoose.connect('mongodb://mongo-bp-service-prod:27017/todos', { useNewUrlParser: true });
 const connection = mongoose.connection;
 
 connection.once('open', function() {
@@ -69,110 +69,56 @@ todoRoutes.route('/add').post(function(req, res) {
 
 app.use('/todos', todoRoutes);
 
-// App
-const client = require('prom-client');
-const collectDefaultMetrics = client.collectDefaultMetrics;
-// Probe every 5th second.
-collectDefaultMetrics({ timeout: 5000 });
 
-const counter = new client.Counter({
-  name: 'node_request_operations_total',
-  help: 'The total number of processed requests'
-});
-
-const histogram = new client.Histogram({
-  name: 'node_request_duration_seconds',
-  help: 'Histogram for the duration in seconds.',
-  buckets: [1, 2, 5, 6, 10]
-});
-
-// const app = express();
-app.get('/hello', (req, res) => {
-
-  //Simulate a sleep
-  var start = new Date()
-  var simulateTime = 1000
-
-  setTimeout(function(argument) {
-    // execution time simulated with setTimeout function
-    var end = new Date() - start
-    histogram.observe(end / 1000); //convert to seconds
-  }, simulateTime)
-
-  counter.inc();
-  
-  res.send('Hello world\n');
-});
-
-
-// Metrics endpoint
-app.get('/metrics', (req, res) => {
-  res.set('Content-Type', client.register.contentType)
-  res.end(client.register.metrics())
-})
-
-
-
+app.use(promMid({
+  metricsPath: '/metrics',
+  collectDefaultMetrics: true,
+  requestDurationBuckets: [0.1, 0.5, 1, 1.5],
+  requestLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
+  responseLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
+  /**
+   * Uncomenting the `authenticate` callback will make the `metricsPath` route
+   * require authentication. This authentication callback can make a simple
+   * basic auth test, or even query a remote server to validate access.
+   * To access /metrics you could do:
+   * curl -X GET user:password@localhost:9091/metrics
+   */
+  // authenticate: req => req.headers.authorization === 'Basic dXNlcjpwYXNzd29yZA==',
+  /**
+   * Uncommenting the `extraMasks` config will use the list of regexes to
+   * reformat URL path names and replace the values found with a placeholder value
+  */
+  // extraMasks: [/..:..:..:..:..:../],
+  /**
+   * The prefix option will cause all metrics to have the given prefix.
+   * E.g.: `app_prefix_http_requests_total`
+   */
+  // prefix: 'app_prefix_',
+  /**
+   * Can add custom labels with customLabels and transformLabels options
+   */
+  // customLabels: ['contentType'],
+  // transformLabels(labels, req) {
+  //   // eslint-disable-next-line no-param-reassign
+  //   labels.contentType = req.headers['content-type'];
+  // },
+}));
 
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);
 });
 
-// 'use strict';
 
-// const express = require('express');
 
-// // Constants
-// const PORT = 4000;
-// // const HOST = '0.0.0.0';
 
-// // App
-// const client = require('prom-client');
-// const collectDefaultMetrics = client.collectDefaultMetrics;
-// // Probe every 5th second.
-// collectDefaultMetrics({ timeout: 5000 });
 
-// const counter = new client.Counter({
-//   name: 'node_request_operations_total',
-//   help: 'The total number of processed requests'
+// curl -X GET localhost:9091/hello?name=Chuck%20Norris
+// app.get('/hello', (req, res) => {
+//   console.log('GET /hello');
+//   const { name = 'Anon' } = req.query;
+//   res.json({ message: `Hello, ${name}!` });
 // });
 
-// const histogram = new client.Histogram({
-//   name: 'node_request_duration_seconds',
-//   help: 'Histogram for the duration in seconds.',
-//   buckets: [1, 2, 5, 6, 10]
+// app.listen(PORT, () => {
+//   console.log(`Example api is listening on http://localhost:${PORT}`);
 // });
-
-// const app = express();
-// app.get('/', (req, res) => {
-
-//   //Simulate a sleep
-//   var start = new Date()
-//   var simulateTime = 1000
-
-//   setTimeout(function(argument) {
-//     // execution time simulated with setTimeout function
-//     var end = new Date() - start
-//     histogram.observe(end / 1000); //convert to seconds
-//   }, simulateTime)
-
-//   counter.inc();
-  
-//   res.send('Hello world\n');
-// });
-
-
-// // Metrics endpoint
-// app.get('/metrics', (req, res) => {
-//   res.set('Content-Type', client.register.contentType)
-//   res.end(client.register.metrics())
-// })
-
-// app.listen(PORT, function() {
-//     console.log("Server is running on Port: " + PORT);
-// });
-
-// // app.listen(PORT, HOST);
-// // console.log(`Running on http://${HOST}:${PORT}`);
-
-
