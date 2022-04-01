@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const todoRoutes = express.Router();
 const promMid = require('express-prometheus-middleware');
 const PORT = 4000;
+require('dotenv').config();
+const baseURL = process.env.MONGO_SVC_BASE_URL
 
 let Todo = require('./todo.model');
 
@@ -13,7 +15,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // mongoose.connect('https://mongo.fajarsujai.my.id/todos', { useNewUrlParser: true });
-mongoose.connect('mongodb://mongo-bp-service-prod:27017/todos', { useNewUrlParser: true });
+mongoose.connect(`mongodb://${baseURL}:27017/todos`, { useNewUrlParser: true });
 const connection = mongoose.connection;
 
 connection.once('open', function() {
